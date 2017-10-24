@@ -11,7 +11,7 @@ assign = tf.assign(v1, v2, name='assign_v2_to_v1')
 
 # ---------------------------------Saver------------------------------------- #
 
-# Allows saving and loading of model data (variables, )
+# Allows saving and loading of model data (variables)
 saver = tf.train.Saver(name='saver')
 # Alternatively save only certain variables with
 saver_selective = tf.train.Saver({'v1': v1}, name='saver_selective')
@@ -57,6 +57,7 @@ with tf.Session() as sess:
   print('Saved model to {}'.format(save_path))
 
   print('RUN INITIALIZE TO RESET')
+  sess.run(tf.global_variables_initializer())
   print('v1 = {}'.format(sess.run(v1)))
   step += 1
   summaries = sess.run(merged_summaries)
@@ -64,14 +65,6 @@ with tf.Session() as sess:
 
   saver.restore(sess, save_path)
   print('Restored model from {}'.format(save_path))
-  # This will still be [0, 0, 0, 0] as we have to initialize first
-  print('v1 = {}'.format(sess.run(v1)))
-  step += 1
-  summaries = sess.run(merged_summaries)
-  create_summary(event_writer, step, summaries)
-
-  print('INITIALIZE RESTORED VARIABLES')
-  sess.run(tf.global_variables_initializer())
   print('v1 = {}'.format(sess.run(v1)))
   step += 1
   summaries = sess.run(merged_summaries)
